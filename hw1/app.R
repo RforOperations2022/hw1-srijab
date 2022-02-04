@@ -105,7 +105,8 @@ ui <- fluidPage(
                                    "Williamsburg - Bushwick", "Jamaica", "Lower Manhattan","East Harlem","Flushing - Clearview",
                                    "Washington Heights - Inwood","Union Square - Lower Eastside","Upper Westside","Coney Island - Sheepshead Bay",
                                    "Gramercy Park - Murray Hill", "Bedford Stuyvesant - Crown Heights","Northeast Bronx"),
-                       selected = c("Upper Eastside", "High Bridge - Morrisania", "Jamaica", "East Harlem", "Northeast Bronx", "Lower Manhattan")),
+                       selected = c("Upper Eastside", "High Bridge - Morrisania", "Jamaica", "East Harlem", "Northeast Bronx", "Lower Manhattan",
+                                    "West Queens","Williamsburg - Bushwick")),
     
   
     
@@ -227,6 +228,21 @@ server <- function(input, output, session) {
                     rownames = FALSE)
     }
   )
+  
+  # Reactive value for selected dataset ----
+  datasetInput <- reactive({
+    switch(input$dataset,
+           "HIV/AIDS DATA" = neighborhood_sample())
+  })
+  output$downloadData <- downloadHandler(
+    filename = function() {
+      paste(input$dataset,".csv", sep = "")
+    },
+    content = function(file) {
+      write.csv(datasetInput(), file, row.names = FALSE)
+    }
+  )
+
 }
 
 # Run the application -----------------------------------------------
